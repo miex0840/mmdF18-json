@@ -10,6 +10,8 @@
     <style>
         body {
             background-color: rgb(240, 240, 240);
+            text-align: center;
+            margin: 0;
         }
 
         article {
@@ -35,10 +37,51 @@
                 grid-template-columns: repeat(3, 1fr);
             }
         }
+
+        article:nth-child(odd) {
+            background-color: lightgray;
+        }
+
+        #modal {
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            background-color: rgba(0, 0, 0, .7);
+            /*display: none;*/
+            opacity: 0;
+            pointer-events: none;
+            transition: 1s;
+        }
+
+        #modal.vis {
+            /*display: block;*/
+            opacity: 1;
+            pointer-events: all;
+            transition: 1s;
+        }
+
+        #modal-content {
+            width: 70vw;
+            height: 70vh;
+            background-color: rgba(250, 250, 250, 1);
+            margin: auto;
+        }
     </style>
 </head>
 
 <body>
+
+    <section id="modal">
+        <button>Close</button>
+        <div id="modal-content">
+            <h2 class="modal-navn"></h2>
+            <img class="modal-billede" src="" alt=""><br>
+            <strong>Type:</strong>
+            <span class="modal-kategori"></span><br>
+            <span class="modal-langbeskrivelse"></span>
+        </div>
+    </section>
+
     <header>
 
         <nav>
@@ -85,7 +128,7 @@
 
         function filtrering() {
             dest.textContent = "";
-            kategoriFilter = this.getAttribute("data-civilstatus");
+            kategoriFilter = this.getAttribute("data-kategori");
             visRetter();
         }
 
@@ -102,7 +145,10 @@
 
                     //indsæt data i klonen
                     klon.querySelector("h2").textContent = ret.navn;
-                    klon.querySelector("img").src = "imgs/medium/" + ret.billede + ".jpg";
+                    klon.querySelector("img").src = "imgs/small/" + ret.billede + "-sm.jpg";
+                    klon.querySelector("img").addEventListener("click", () => {
+                        visModal(ret);
+                    });
                     klon.querySelector(".data-kortbeskrivelse").textContent = ret.kortbeskrivelse;
                     klon.querySelector(".data-pris").textContent = "Pris " +
                         ret.pris + ",-";
@@ -112,6 +158,21 @@
                 }
 
             })
+        }
+
+        function visModal(retten) {
+            let modal = document.querySelector("#modal")
+            modal.classList.add("vis");
+            modal.querySelector(".modal-navn").textContent = retten.navn;
+            modal.querySelector(".modal-billede").src = "imgs/small/" + retten.billede + "-sm.jpg";
+            modal.querySelector(".modal-billede").alt = "Foto af " + retten.navn;
+            modal.querySelector(".modal-kategori").textContent += retten.kategori;
+            modal.querySelector(".modal-langbeskrivelse").textContent = retten.langbeskrivelse;
+            modal.querySelector("button").addEventListener("click", skjulModal);
+        }
+
+        function skjulModal() {
+            modal.classList.remove("vis");
         }
     </script>
 </body>
