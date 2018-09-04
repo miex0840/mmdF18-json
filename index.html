@@ -39,7 +39,17 @@
 </head>
 
 <body>
-    <header></header>
+    <header>
+
+        <nav>
+            <button class="menu-item" data-kategori="alle">Alle</button>
+            <button class="menu-item" data-kategori="forretter">Forretter</button>
+            <button class="menu-item" data-kategori="hovedretter">Hovedretter</button>
+            <button class="menu-item" data-kategori="desserter">Desserter</button>
+            <button class="menu-item" data-kategori="drikkevarer">Drikkevarer</button>
+        </nav>
+
+    </header>
 
     <main class="container">
         <h1>Menu</h1>
@@ -55,32 +65,52 @@
     </template>
 
     <script>
-        let retter;
+        let dest = document.querySelector(".data-container"),
+            retter, kategoriFilter = "alle"; //filter variabel
         document.addEventListener("DOMContentLoaded", hentJson);
 
         async function hentJson() {
             let myJson = await fetch("menu.json");
             retter = await myJson.json();
+            retter.sort((a, b) => {
+                return a.navn.localeCompare(b.navn);
+            })
+            visRetter();
+        }
+
+        //eventlistnere på knapper
+        document.querySelectorAll(".menu-item").forEach(knap => {
+            knap.addEventListener("click", filtrering)
+        });
+
+        function filtrering() {
+            dest.textContent = "";
+            kategoriFilter = this.getAttribute("data-civilstatus");
             visRetter();
         }
 
         function visRetter() {
-            let dest = document.querySelector(".data-container"),
-                temp = document.querySelector(".data-template");
+            /*            let dest = document.querySelector(".data-container"),
+                            temp = document.querySelector(".data-template");*/
+
+            let temp = document.querySelector(".data-template");
 
             //løb listen af retter igennem og lav en klon
             retter.forEach(ret => {
-                let klon = temp.cloneNode(true).content;
+                if (ret.kategori == kategoriFilter || kategoriFilter == "alle") {
+                    let klon = temp.cloneNode(true).content;
 
-                //indsæt data i klonen
-                klon.querySelector("h2").textContent = ret.navn;
-                //klon.querySelector("img").src = ;
-                klon.querySelector(".data-kortbeskrivelse").textContent = ret.kortbeskrivelse;
-                klon.querySelector(".data-pris").textContent = "Pris " +
-                    ret.pris + ",-";
+                    //indsæt data i klonen
+                    klon.querySelector("h2").textContent = ret.navn;
+                    klon.querySelector("img").src = "imgs/medium/" + ret.billede + ".jpg";
+                    klon.querySelector(".data-kortbeskrivelse").textContent = ret.kortbeskrivelse;
+                    klon.querySelector(".data-pris").textContent = "Pris " +
+                        ret.pris + ",-";
 
-                //placer klon i DOM
-                dest.appendChild(klon);
+                    //placer klon i DOM
+                    dest.appendChild(klon);
+                }
+
             })
         }
     </script>
