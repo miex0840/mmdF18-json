@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="">
+
+    <style>
+        body {
+            background-color: rgb(240, 240, 240);
+        }
+
+        article {
+            padding: 1em;
+            background-color: white;
+        }
+
+        .data-container article img {
+            width: 100%;
+        }
+
+        .data-container {
+            margin: 0 auto;
+            display: grid;
+            grid-gap: 5px;
+        }
+
+        @media screen and (min-width:580px) {
+            .data-container {
+                padding-left: 10%;
+                padding-right: 10%;
+                grid-gap: 5px;
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header></header>
+
+    <main class="container">
+        <section class="data-container"></section>
+    </main>
+    <template class="data-template">
+        <article class="ret">
+            <h2></h2>
+            <img src="" alt=""><br>
+            <span class="data-kortbeskrivelse"></span><br>
+            <span class="data-pris"></span><br>
+        </article>
+    </template>
+
+    <script>
+        let retter;
+        document.addEventListener("DOMContentLoaded", hentJson);
+
+        async function hentJson() {
+            let myJson = await fetch("menu.json");
+            retter = await myJson.json();
+            visRetter();
+        }
+
+        function visRetter() {
+            let dest = document.querySelector(".data-container"),
+                temp = document.querySelector(".data-template");
+
+            //løb listen af retter igennem og lav en klon
+            retter.forEach(ret => {
+                let klon = temp.cloneNode(true).content;
+
+                //indsæt data i klonen
+                klon.querySelector("h2").textContent = ret.navn;
+                //klon.querySelector("img").src = ;
+                klon.querySelector(".data-kortbeskrivelse").textContent = ret.kortbeskrivelse;
+                klon.querySelector(".data-pris").textContent = "Pris " +
+                    ret.pris + ",-";
+
+                //placer klon i DOM
+                dest.appendChild(klon);
+            })
+        }
+    </script>
+</body>
+
+</html>
