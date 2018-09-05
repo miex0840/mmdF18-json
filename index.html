@@ -77,11 +77,15 @@
         }
 
         #modal-content {
-            width: 70vw;
+            width: 60vw;
             height: auto;
             background-color: rgba(250, 250, 250, 1);
             margin: auto;
             padding: 1em;
+        }
+
+        #modal-content img {
+            max-width: 700px;
         }
 
         #top {}
@@ -193,7 +197,7 @@
             let modal = document.querySelector("#modal")
             modal.classList.add("vis");
             modal.querySelector(".modal-navn").textContent = retten.navn;
-            modal.querySelector(".modal-billede").src = "imgs/small/" + retten.billede + "-sm.jpg";
+            modal.querySelector(".modal-billede").src = "imgs/large/" + retten.billede + ".jpg";
             modal.querySelector(".modal-billede").alt = "Foto af " + retten.navn;
             modal.querySelector(".modal-kategori").textContent = retten.kategori;
 
